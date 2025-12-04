@@ -1,33 +1,126 @@
-README pour le rendu final du projet
+# THL – Calculatrice scientifique en MVàP
 
-Ce fichier présente nos réalisations dans le cadre du projet de calculatrice scientifique en MVàP :
+Ce dépôt contient notre projet de **calculatrice scientifique compilée vers MVàP** réalisé dans le cadre du module **THL** (Devoir Maison / DM17).
 
-Nous avons réussi à couvrir toutes les parties du TP, de la section A à la section M, en passant avec succès tous les benchmarks proposés. De plus, nous avons apporté quelques améliorations significatives. Ci-dessous, vous trouverez une brève description de ce que nous avons réalisé :
+L’objectif est de prendre en entrée un mini-langage impératif (avec variables, fonctions, boucles, conditions, etc.), et de **générer du code MVàP** exécutable sur la machine virtuelle fournie dans le cadre du cours.
 
-A- Génération de code MVàP :
-    Nous avons créé une grammaire ANTLR pour générer du code MVàP à partir d'expressions mathématiques, prenant en charge les opérations de base avec respect des priorités opérationnelles.
+---
 
-B- Traitement des variables :
-    Prise en charge des variables globales et locales de type int, double et bool avec gestion des déclarations et assignations dans le main comme dans le coeur des fonctions.
+## 👥 Auteurs
 
-C- Traitement des entrées/sorties :
-    Mise en place de la gestion des entrées et des sorties grace aux instruction readln et println pour permettre une interaction avec le programme.
+- **Wassim DJEHA** – n° étudiant : 22208244  
+- **Louheb KACED** – n° étudiant : 22111744  
 
-D- Expressions logiques :
-    Extension de la grammaire pour inclure les opérateurs logiques, permettant l'évaluation des conditions booléennes.
+---
 
-E- Boucle for , while et instructions if-else :
-    Ajout de la génération du code pour la boucle for et while, gestion des instructions if-else pour pour améliorer notre calculatrice MVaP.
+## 📁 Contenu du projet
 
-F- Fonctions :
-    Mise en place des fonctions (itératives et récursives) avec ou sans valeur de retour, avec ou sans arguments, pour tous les types de variables qu'on a mis en place.
+Les fichiers principaux sont :
 
-G- Conversion de types :
-    Réalisation de la conversion entre les différents types de données pour assurer la cohérence des opérations (par exemple int vers double , bool vers int ...).
+- `Calculette.g4` : grammaire ANTLR de notre langage de calculatrice.
+- `CalculetteLexer.java`, `CalculetteParser.java`, `CalculetteBaseListener.java`, `CalculetteListener.java`  
+  Générés par ANTLR à partir de `Calculette.g4` (contenus dans le dépôt pour faciliter les tests).
+- `TablesSymboles.java`, `TableSimple.java`, `VariableInfo.java`  
+  Gestion des **tables de symboles**, des types et des adresses mémoire (variables globales, locales, paramètres).
+- Dossier `.antlr/` : fichiers générés par ANTLR (intermédiaires, .interp, .tokens, etc.).
+- `ReadMe.txt` : consignes de rendu et description succincte du projet fournies pour le DM.
 
-H- Manipulation des flottants et booléens :
-    Extension de la prise en charge pour inclure les opérations arithmétiques et logiques avec les flottants et les booléens.
+---
 
-O- Améliorations réalisées : 
-    En ce qui concerne les améliorations proposées, nous avons réalisé celle de supporter plusieurs types. Nous avons étendu les fonctionnalités de notre calculatrice pour prendre en charge plusieurs types de données, y compris les flottants et les booléens. Grâce à l'intégration d'opcodes spécifiques dans notre grammaire MVÀP, nous pouvons désormais effectuer des opérations arithmétiques et des comparaisons sur les flottants avec précision. De plus, la gestion des variables booléennes permet une manipulation simplifiée des conditions. Les conversions entre différents types sont également supportées.
+## 🧩 Fonctionnalités implémentées
 
+Nous avons couvert **toutes les parties du sujet**, de la section **A** à **M**, ainsi que les **améliorations** demandées.  
+Ci-dessous un résumé des principaux points.
+
+### A. Génération de code MVàP
+
+- Grammaire ANTLR pour parser des **expressions mathématiques**.
+- Prise en charge des opérations arithmétiques classiques : `+`, `-`, `*`, `/`, `%`.
+- Respect des **priorités opératoires** (parenthèses, produits avant sommes, etc.).
+- Génération des instructions MVàP correspondantes (ex : `PUSHI`, `MUL`, `ADD`, `FSUB`, etc.).
+
+### B. Variables (globales, locales, typées)
+
+- Gestion des **variables globales et locales**.
+- Types supportés : `int`, `double`, `bool`.
+- Déclaration et affectation possibles :
+  - dans le **main**,
+  - dans le **corps des fonctions**.
+- Utilisation d’une table des symboles pour suivre :
+  - le type de chaque variable,
+  - son adresse (position dans la pile),
+  - son scope (global / paramètre / local).
+
+### C. Entrées / sorties
+
+- Prise en charge des instructions d’E/S :
+  - `readln` : lecture d’une valeur depuis l’entrée standard,
+  - `println` : affichage d’une valeur.
+- Génération du code MVàP adapté (lecture / affichage de valeurs typées).
+
+### D. Expressions logiques
+
+- Extension de la grammaire pour inclure les **opérateurs logiques et relationnels**.
+- Support par exemple de :
+  - opérateurs de comparaison : `<`, `>`, `<=`, `>=`, `==`, `<>`,
+  - combinaisons avec booléens.
+- Génération des instructions MVàP logiques / de comparaison adaptées pour `int` et `double`.
+
+### E. Boucles et structures de contrôle
+
+- Génération de code pour :
+  - **boucle `while`**,
+  - **boucle `for`**,
+  - **instructions conditionnelles `if` / `if-else`**.
+- Gestion des labels (étiquettes) pour les sauts conditionnels et inconditionnels dans le code MVàP.
+
+### F. Fonctions (itératives et récursives)
+
+- Définition et appel de **fonctions** :
+  - avec ou sans **valeur de retour**,
+  - avec ou sans **arguments**,
+  - support des **fonctions récursives**.
+- Gestion :
+  - des paramètres,
+  - des variables locales,
+  - du type de retour pour générer le bon code de fin de fonction.
+
+### G. Conversion de types
+
+- Gestion des conversions nécessaires entre :
+  - `int` ↔ `double`,
+  - `bool` ↔ `int` (par exemple).
+- Génération d’instructions adaptées pour garantir la **cohérence des opérations**.
+- Permet de combiner des expressions mixtes tout en préservant la validité des calculs.
+
+### H. Flottants et booléens
+
+- Prise en charge complète :
+  - des **flottants** (`double`) pour les opérations arithmétiques,
+  - des **booléens** pour les conditions et expressions logiques.
+- Utilisation d’opcodes spécifiques « flottants » pour les opérations sur `double`.
+
+### O. Améliorations réalisées
+
+En plus des exigences de base, nous avons :
+
+- Étendu la calculatrice pour supporter **plusieurs types de données** (int, double, bool).
+- Ajouté la possibilité :
+  - d’effectuer des **opérations arithmétiques** et **des comparaisons** sur les flottants,
+  - de manipuler proprement des **variables booléennes** dans les conditions,
+  - d’enchaîner les **conversions de types** (int ⇄ double, bool ⇄ int) en toute transparence.
+
+---
+
+## 🛠️ Compilation et exécution (résumé)
+
+L’environnement exact dépend de l’infrastructure fournie dans le TP/DM, mais l’idée générale est :
+
+1. **Générer (si besoin) les fichiers ANTLR** à partir de `Calculette.g4` :
+   - via ANTLR4 (ligne de commande ou plugin),
+   - les fichiers générés (`CalculetteLexer.java`, `CalculetteParser.java`, etc.) sont déjà présents dans ce dépôt.
+
+2. **Compiler les fichiers Java** :
+
+   ```bash
+   javac *.java
